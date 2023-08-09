@@ -42,7 +42,7 @@ class ListItem:
     def __init__(self, text="", due_date=""):
         current_time = get_time() # Ensure original modifiedDT = createDT
         self.text = text
-        self.title = self.text[:10]
+        self.title = self.text[:15]
         self.create_dt = current_time
         self.last_modified_dt = current_time
         self.due_date = due_date
