@@ -3,14 +3,20 @@ from tkinter import ttk
 from lib import ToDoList
 import constants as C
 
+#TODO - Clean up bugs where notes can overwrite each other with rapid clicking
+# Add Save/Load button to utilize JSON files
+
 class ToDoAppGUI(tk.Tk):
-    def __init__(self):
+    def __init__(self, args):
         super().__init__()
 
         self.title("To-Do List")
         self.geometry("800x800")
 
         self.todo_list = ToDoList()
+        if args.loadfile:
+            self.todo_list.set_filename(args.loadfile)
+        self.todo_list.load_from_json()
 
         # Split window left/right
         l_frm =ttk.Frame(self, width=200)
@@ -37,12 +43,14 @@ class ToDoAppGUI(tk.Tk):
         self.item_lbox.bind("<Double-Button-1>", self.edit_item)
         self.item_lbox.bind("<Button-1>", self.load_contents)
 
+        self.load_items_to_listbox()
+        self.load_contents
 
     def add_item(self, text=""):
         self.todo_list.add_item(text)
         self.todo_list.items[-1].set_title("New Note")
         self.load_items_to_listbox()
-        self.load_contents(self)
+        self.load_contents
     
     def delete_item(self):
         selected_index = self.item_lbox.curselection()
@@ -50,7 +58,7 @@ class ToDoAppGUI(tk.Tk):
             selected_index = selected_index[0]
             self.todo_list.delete_item(selected_index)
             self.load_items_to_listbox()
-            self.load_contents(self)
+            self.load_contents
 
     def load_items_to_listbox(self):
         self.item_lbox.delete(0, tk.END)
@@ -67,12 +75,12 @@ class ToDoAppGUI(tk.Tk):
             self.item_txt.bind("<FocusOut>", lambda _: self.update_item(selected_index, self.item_txt.get(1.0, tk.END)))
             
             self.load_items_to_listbox()
-            self.load_contents(self)
+            self.load_contents
 
     def update_item(self, index, text):
         self.todo_list.items[index].set_title(text)
         self.load_items_to_listbox()
-        self.load_contents(self)
+        self.load_contents
         self.item_txt.destroy()
     
     def load_contents(self, event):
@@ -89,7 +97,7 @@ class ToDoAppGUI(tk.Tk):
             selected_index = selected_index[0]
             item = self.todo_list.items[selected_index]
             item.set_text(self.r_txt.get(1.0, tk.END))
-            self.load_contents(self)
+            self.load_contents
 
 
 
